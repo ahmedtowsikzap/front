@@ -11,24 +11,28 @@ function Login() {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:5000/api/users/login', { username, password });
-      const { message, role } = response.data;
-
+  
+      // Log the entire response data to inspect its structure
+      console.log("Login Response Data:", response.data);
+  
+      const { message, role, userId, username: dbUsername } = response.data; // Destructure the necessary data
+  
       alert(message);
-
+  
       if (role === 'CEO' || role === 'Manager') {
-        navigate('/admin'); // CEO and Manager navigate to admin dashboard
+        navigate('/admin', { state: { role } });
       } else if (role === 'User') {
-        navigate('/user'); // Regular users navigate to user dashboard
+        navigate('/user', { state: { userId, username: dbUsername } }); // Pass userId and username here
       } else {
         alert('Unknown role. Please contact support.');
       }
       
     } catch (err) {
-      // Check for specific error response or default to generic error message
       const errorMessage = err.response?.data?.message || 'Login failed. Please try again.';
       alert(errorMessage);
     }
   };
+  
 
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center items-center">
