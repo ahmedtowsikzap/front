@@ -3,15 +3,21 @@ import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 
 function UserDashboard() {
+<<<<<<< HEAD
   const [sheets, setSheets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+=======
+  const [userSheets, setUserSheets] = useState([]);
+  const [error, setError] = useState('');
+>>>>>>> f53139744c0402026cf1b293b82b88fc411f7b67
 
   const location = useLocation();
   const { userId, username } = location.state || {};
 
   // Check if userId is not passed
   useEffect(() => {
+<<<<<<< HEAD
     if (!userId) {
       setError("No user ID provided.");
       setLoading(false);
@@ -63,6 +69,47 @@ function UserDashboard() {
           ))
         ) : (
           <p>No sheets assigned to you</p>
+=======
+    async function fetchAssignedSheets() {
+      try {
+        const response = await axios.get('http://localhost:5000/api/users/me'); // Replace with the actual endpoint for the logged-in user's data
+        setUserSheets(response.data.assignedSheets);
+        setError('');
+      } catch (err) {
+        console.error('Error fetching user sheets:', err);
+        setError('Failed to load sheets. Please try again later.');
+      }
+    }
+    fetchAssignedSheets();
+  }, []);
+
+  return (
+    <div className="p-8">
+      <h2 className="text-3xl mb-4">User Dashboard</h2>
+      {error && <div className="text-red-500 mb-4">{error}</div>}
+
+      <div>
+        {userSheets.length > 0 ? (
+          <ul className="list-disc pl-5">
+            {userSheets.map((sheet) => (
+              <li key={sheet._id} className="mb-2">
+                <a
+                  href={sheet.sheetUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500 underline"
+                >
+                  {sheet.sheetUrl}
+                </a>
+                <div className="text-sm text-gray-600">
+                  Assigned on: {new Date(sheet.createdAt).toLocaleString()}
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No sheets assigned to you yet.</p>
+>>>>>>> f53139744c0402026cf1b293b82b88fc411f7b67
         )}
       </div>
     </div>
